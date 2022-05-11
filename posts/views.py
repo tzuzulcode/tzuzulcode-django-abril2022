@@ -10,7 +10,7 @@ def home(request):
 
 
 def posts(request):
-    posts = Post.objects.all()  # SELECT * FROM posts
+    posts = Post.objects.all().order_by("-created_date", "-id")   # SELECT * FROM posts
 
     print(posts)
     # return HttpResponse("Publicaciones")
@@ -40,3 +40,20 @@ def create_post(request):
         return redirect("/posts")
 
     return render(request, 'posts/create.html')
+
+
+def edit_post(request, id):
+    post = Post.objects.get(id=id)
+    if request.method == "POST":
+
+        post.title = request.POST['title']
+        post.description = request.POST['description']
+        post.img = request.POST['image']
+        post.content = request.POST['content']
+
+
+        post.save()
+
+        return redirect("/posts")
+
+    return render(request, 'posts/edit.html', {'post': post})

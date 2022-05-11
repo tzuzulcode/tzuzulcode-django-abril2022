@@ -7,7 +7,7 @@ class Post(models.Model):
     description = models.CharField(max_length=100)
     img = models.CharField(max_length=240)
     content = models.TextField()
-    created_date = models.DateField(auto_now_add=True)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.created_date.strftime("%d/%m/%Y") + " " + self.title

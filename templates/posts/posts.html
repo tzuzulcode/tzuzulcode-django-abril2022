@@ -18,15 +18,24 @@
     <a href="/posts/create">Crear publicación</a>
     <section class="posts">
         {% for post in posts %}
-            <article class="card">
-                <div class="card-body">
-                    <h2 class="card-title">{{ post.title }}</h2>
-                    <p>{{ post.created_date }}</p>
-                    <p class="card-text">{{ post.description }}</p>
-                </div>
 
-                <img class="card-img-bottom" src="{{ post.img }}">
-            </article>
+                <article class="card">
+                    <div class="card-body">
+                        <a href="/posts/{{ post.id }}">
+                            <h2 class="card-title">{{ post.title }}</h2>
+                        </a>
+
+                        <p>{{ post.created_date }}</p>
+                        <p class="card-text">{{ post.description }}</p>
+                        <a href="/posts/edit/{{ post.id }}">Editar publicacion</a>
+                    </div>
+
+                    <a href="/posts/{{ post.id }}">
+                        <img class="card-img-bottom" src="{{ post.img }}">
+                    </a>
+
+                </article>
+
         {% endfor %}
     </section>
 
