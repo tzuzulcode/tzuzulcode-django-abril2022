@@ -57,3 +57,10 @@ def edit_post(request, id):
         return redirect("/posts")
 
     return render(request, 'posts/edit.html', {'post': post})
+
+
+def delete_post(request,id):
+    post = Post.objects.get(id=id)
+
+    post.delete()
+    return redirect("/posts")

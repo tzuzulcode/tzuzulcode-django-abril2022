@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 # Create your models here.
@@ -11,3 +12,6 @@ class Post(models.Model):
 
     def __str__(self):
         return self.created_date.strftime("%d/%m/%Y") + " " + self.title
+
+    def get_url(self):
+        return reverse('posts:post_detail', args=[self.pk])
