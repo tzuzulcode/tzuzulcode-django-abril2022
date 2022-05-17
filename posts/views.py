@@ -32,7 +32,8 @@ def create_post(request):
             title=request.POST['title'],
             description=request.POST['description'],
             img=request.POST['image'],
-            content=request.POST['content']
+            content=request.POST['content'],
+            author=request.user
         )
 
         post.save()
