@@ -12,6 +12,7 @@ def home(request):
 def posts(request):
     posts = Post.objects.all().order_by("-created_date", "-id")   # SELECT * FROM posts
 
+    #posts = Post.objects.filter(title__icontains="Publicación") # SELECT * FROM posts WHERE title LIKE "Publicación"
     print(posts)
     # return HttpResponse("Publicaciones")
 
