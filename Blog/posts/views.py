@@ -6,7 +6,7 @@ from .models import Post
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, '../templates/home.html')
 
 
 def posts(request):
@@ -16,7 +16,7 @@ def posts(request):
     print(posts)
     # return HttpResponse("Publicaciones")
 
-    return render(request, 'posts/posts.html', {
+    return render(request, 'posts/../templates/posts/posts.html', {
         'posts': posts
     })
 
@@ -24,7 +24,7 @@ def posts(request):
 def post(request, id):
     post = Post.objects.get(id=id)
 
-    return render(request, 'posts/post.html', {'post':post})
+    return render(request, 'posts/../templates/posts/post.html', {'post':post})
 
 
 def create_post(request):
@@ -41,7 +41,7 @@ def create_post(request):
 
         return redirect("/posts")
 
-    return render(request, 'posts/create.html')
+    return render(request, 'posts/../templates/posts/create.html')
 
 
 def edit_post(request, id):
@@ -58,7 +58,7 @@ def edit_post(request, id):
 
         return redirect("/posts")
 
-    return render(request, 'posts/edit.html', {'post': post})
+    return render(request, 'posts/../templates/posts/edit.html', {'post': post})
 
 
 def delete_post(request,id):

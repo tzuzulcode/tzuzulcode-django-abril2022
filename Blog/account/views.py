@@ -19,17 +19,17 @@ def user_login(request):
                 login(request, user) # Agregar al usuario a la sesión
                 return redirect("/")
             else:
-                return render(request, 'auth/login.html', {
+                return render(request, 'auth/../templates/auth/login.html', {
                     "error": True,
                     "message": "Disabled account"
                 })
         else:
-            return render(request, 'auth/login.html', {
+            return render(request, 'auth/../templates/auth/login.html', {
                 "error": True,
                 "message": "Invalid credentials"
             })
 
-    return render(request, 'auth/login.html')
+    return render(request, 'auth/../templates/auth/login.html')
 
 
 def user_signup(request):
@@ -42,7 +42,7 @@ def user_signup(request):
         email = request.POST['email']
 
         if password_confirmation!=password:
-            return render(request, "auth/signup.html", {
+            return render(request, "auth/../templates/auth/signup.html", {
                 "error": True,
                 "message": "Password and password confirmation does not match"
             })
@@ -56,12 +56,12 @@ def user_signup(request):
             return redirect("/")
 
         except IntegrityError:
-            return render(request,"auth/signup.html",{
+            return render(request, "auth/../templates/auth/signup.html", {
                 "error":True,
                 "message": "Email or username already registered"
             })
 
-    return render(request, "auth/signup.html")
+    return render(request, "auth/../templates/auth/signup.html")
 
 
 def user_logout(request):
