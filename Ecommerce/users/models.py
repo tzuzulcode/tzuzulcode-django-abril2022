@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    isEmailValid = models.BooleanField()
+    isEmailValid = models.BooleanField(default=False)
     country = models.CharField(max_length=50, null=True)
     state = models.CharField(max_length=50, null=True)
     city = models.CharField(max_length=50, null=True)

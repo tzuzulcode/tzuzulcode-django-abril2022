@@ -1,12 +1,12 @@
 from django.db import models
 from products.models import Product
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Cart(models.Model):
-    pass
-
-
-# Relacion 1 a 1 con user
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
 
 
 # Create your models here.
