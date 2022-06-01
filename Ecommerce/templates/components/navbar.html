@@ -2,5 +2,11 @@
     <ul class="links">
         <li><a class="link" href="/">Home</a></li>
         <li><a class="link" href="/">Ruta 2</a></li>
+        {% if user.is_authenticated %}
+            <li><a class="link" href="/auth/logout">{{ user.username }}</a></li>
+        {% else %}
+            <li><a class="link" href="/auth/login">Login</a></li>
+            <li><a class="link" href="/auth/signup">Sign up</a></li>
+        {% endif %}
     </ul>
 </nav>
