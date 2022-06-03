@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 
+from django.core.mail import send_mail
+
 User = get_user_model()
 
 # Create your views here.
@@ -57,6 +59,21 @@ def signup_view(request):
             new_user.first_name = first_name
             new_user.last_name = last_name
             new_user.save()
+
+            # uuid
+            # Generar un uuid
+            # Guardamos el uuid en el usuario
+            # El usuario visita el vínculo y se toma el uuid del parámetro de la url
+            # Consultamos el usuario por el uuid y marcamos el campo isEmailValid como True
+            # Mostramos html de correo validado
+
+            send_mail(
+                'Verificación de correo',
+                'Por favor verifica tu correo electrónico: http://localhost:8000/auth/verify/' + str(new_user.id),
+                'mail@tzuzulcode.com',
+                [email],
+                fail_silently=False,
+            )
             login(request, new_user)
             return redirect("/")
 

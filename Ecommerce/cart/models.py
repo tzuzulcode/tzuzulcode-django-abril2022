@@ -7,12 +7,13 @@ User = get_user_model()
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+    #products = models.ManyToOneRel(field="CartItem", field_name="id", to="id")
 
 
 # Create your models here.
 class CartItem(models.Model):
     amount = models.IntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="products")
 
 

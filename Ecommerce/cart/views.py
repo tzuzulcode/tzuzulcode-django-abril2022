@@ -1,10 +1,18 @@
-from django.shortcuts import render,redirect
-from .models import CartItem,Cart
+from django.shortcuts import render, redirect
+from .models import CartItem, Cart
 from products.models import Product
+
 
 # Create your views here.
 def get_cart(request):
-    return render(request,"pages/cart.html")
+    if request.user.is_authenticated:
+        products = request.user.cart.products.all()
+
+        return render(request, "pages/cart.html", {
+            "products": products
+        })
+
+    return redirect("/")
 
 
 def add_to_cart(request, idProduct):
@@ -21,5 +29,16 @@ def add_to_cart(request, idProduct):
             cartItem.cart = cart
 
         cartItem.save()
+
+    return redirect("/")
+
+
+def delete_from_cart(request, id_cart_item):
+    if request.user.is_authenticated:
+        cart_item = CartItem.objects.get(pk=id_cart_item)
+        if cart_item.cart.user == request.user:
+            cart_item.delete()
+
+            return redirect("/cart")
 
     return redirect("/")

@@ -10,6 +10,8 @@ body{
     padding: 0;
     background: #eaeaea;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar{
