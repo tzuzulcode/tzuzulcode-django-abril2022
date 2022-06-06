@@ -1,18 +1,18 @@
 from django.shortcuts import render, redirect
 from .models import CartItem, Cart
 from products.models import Product
+from django.utils.decorators import decorator_from_middleware
+from users.middleware import AuthMiddleware
 
 
 # Create your views here.
+@decorator_from_middleware(AuthMiddleware)
 def get_cart(request):
-    if request.user.is_authenticated:
-        products = request.user.cart.products.all()
+    products = request.user.cart.products.all()
 
-        return render(request, "pages/cart.html", {
-            "products": products
-        })
-
-    return redirect("/")
+    return render(request, "pages/cart.html", {
+        "products": products
+    })
 
 
 def add_to_cart(request, idProduct):

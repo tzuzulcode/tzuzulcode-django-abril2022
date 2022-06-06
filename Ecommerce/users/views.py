@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+import uuid
 
 User = get_user_model()
+
 
 # Create your views here.
 def login_view(request):
@@ -49,15 +51,19 @@ def signup_view(request):
         password_confirmation = request.POST['password_confirmation']
         email = request.POST['email']
 
-        if password_confirmation!=password:
+        if password_confirmation != password:
             return render(request, "pages/signup.html", {
                 "error": "Password and password confirmation does not match"
             })
 
         try:
-            new_user = User.objects.create_user(username,email,password)
+
+            email_uuid = str(uuid.uuid4())
+
+            new_user = User.objects.create_user(username, email, password)
             new_user.first_name = first_name
             new_user.last_name = last_name
+            new_user.emailValidationUUID = email_uuid
             new_user.save()
 
             # uuid
@@ -67,13 +73,17 @@ def signup_view(request):
             # Consultamos el usuario por el uuid y marcamos el campo isEmailValid como True
             # Mostramos html de correo validado
 
-            send_mail(
-                'Verificación de correo',
-                'Por favor verifica tu correo electrónico: http://localhost:8000/auth/verify/' + str(new_user.id),
-                'mail@tzuzulcode.com',
-                [email],
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    'Verificación de correo',
+                    'Por favor verifica tu correo electrónico: http://localhost:8000/auth/verify/' + email_uuid,
+                    'mail@tzuzulcode.com',
+                    [email],
+                    fail_silently=False,
+                )
+            except:
+                print("Ocurrio un error al enviar")
+
             login(request, new_user)
             return redirect("/")
 
@@ -83,3 +93,21 @@ def signup_view(request):
             })
 
     return render(request, "pages/signup.html")
+
+
+def validate_email(request, email_uuid):
+    try:
+        user = User.objects.get(emailValidationUUID=email_uuid)
+        user.emailValidationUUID = None
+        user.isEmailValid = True
+        user.save()
+
+        return render(request, "pages/email_validation.html", {
+            "message": "Email validated successfully"
+        })
+
+    except ObjectDoesNotExist:
+        return render(request, "pages/email_validation.html", {
+            "message": "Maybe this validation code has been used. Verify your url"
+        })
+

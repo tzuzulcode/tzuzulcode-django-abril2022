@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     isEmailValid = models.BooleanField(default=False)
+    emailValidationUUID = models.CharField(max_length=40, null=True)
     country = models.CharField(max_length=50, null=True)
     state = models.CharField(max_length=50, null=True)
     city = models.CharField(max_length=50, null=True)
