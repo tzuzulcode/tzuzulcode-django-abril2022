@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block custom_css %}
+    {% load static %}
+    <link href="{% static "css/cart.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block title %}
     My cart
 {% endblock %}
@@ -7,15 +12,24 @@
 
 {% block main %}
     <h1>Carrito</h1>
-    <section>
+    <section class="cart">
         {% for cartItem in products %}
-            <article>
+            <article class="cart-item">
                 <h3>{{ cartItem.product.name }}</h3>
-                <p>Amount: {{ cartItem.amount }}</p>
-                <img src="{{ cartItem.product.image }}">
+                <input id="amount" type="number" max="10" min="1" value="{{ cartItem.amount }}">
+                <img class="cart-item-image" src="{{ cartItem.product.image }}">
                 <a href="/cart/delete/{{ cartItem.id }}">Eliminar</a>
             </article>
         {% endfor %}
     </section>
+
+    <script>
+        const amount = document.getElementById("amount")
+        amount.onchange = function (){
+            alert(amount.value)
+            // fetch de javascript
+        }
+
+    </script>
 
 {% endblock %}

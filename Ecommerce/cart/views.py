@@ -4,15 +4,22 @@ from products.models import Product
 from django.utils.decorators import decorator_from_middleware
 from users.middleware import AuthMiddleware
 
-
 # Create your views here.
-@decorator_from_middleware(AuthMiddleware)
-def get_cart(request):
-    products = request.user.cart.products.all()
+auth_middleware = decorator_from_middleware(AuthMiddleware)
 
-    return render(request, "pages/cart.html", {
-        "products": products
-    })
+print(auth_middleware)
+
+
+@auth_middleware
+def get_cart(request):
+    if request.user.is_authenticated:
+        products = request.user.cart.products.all()
+
+        return render(request, "pages/cart.html", {
+            "products": products
+        })
+
+    return redirect("/")
 
 
 def add_to_cart(request, idProduct):
@@ -20,14 +27,7 @@ def add_to_cart(request, idProduct):
         cartItem = CartItem()
         cartItem.product = Product.objects.get(pk=idProduct)
         cartItem.amount = 1
-        if request.user.cart:
-            cartItem.cart = request.user.cart
-        else:
-            cart = Cart()
-            cart.user = request.user
-            cart.save()
-            cartItem.cart = cart
-
+        cartItem.cart = request.user.cart
         cartItem.save()
 
     return redirect("/")

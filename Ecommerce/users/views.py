@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from cart.models import Cart
 import uuid
 
 User = get_user_model()
@@ -61,17 +62,14 @@ def signup_view(request):
             email_uuid = str(uuid.uuid4())
 
             new_user = User.objects.create_user(username, email, password)
+            cart = Cart()
+            cart.user = new_user
+            cart.save()
+
             new_user.first_name = first_name
             new_user.last_name = last_name
             new_user.emailValidationUUID = email_uuid
             new_user.save()
-
-            # uuid
-            # Generar un uuid
-            # Guardamos el uuid en el usuario
-            # El usuario visita el vínculo y se toma el uuid del parámetro de la url
-            # Consultamos el usuario por el uuid y marcamos el campo isEmailValid como True
-            # Mostramos html de correo validado
 
             try:
                 send_mail(
