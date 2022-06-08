@@ -16,18 +16,28 @@
         {% for cartItem in products %}
             <article class="cart-item">
                 <h3>{{ cartItem.product.name }}</h3>
-                <input id="amount" type="number" max="10" min="1" value="{{ cartItem.amount }}">
+                <input id="amount" type="number" max="10" min="1" value="{{ cartItem.amount }}" onchange="changeAmount(this.value,{{ cartItem.id }})">
                 <img class="cart-item-image" src="{{ cartItem.product.image }}">
                 <a href="/cart/delete/{{ cartItem.id }}">Eliminar</a>
             </article>
         {% endfor %}
     </section>
+    <p class="total">Total: {{ total }}</p>
 
     <script>
-        const amount = document.getElementById("amount")
-        amount.onchange = function (){
-            alert(amount.value)
+        function changeAmount(amount,idItem){
             // fetch de javascript
+            fetch("/cart/change_amount",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    amount:Number.parseInt(amount),
+                    idItem: idItem
+                })
+            }).then(response=>response.json())
+                .then(data=>console.log(data))
         }
 
     </script>

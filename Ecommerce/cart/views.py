@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .models import CartItem, Cart
 from products.models import Product
 from django.utils.decorators import decorator_from_middleware
 from users.middleware import AuthMiddleware
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 auth_middleware = decorator_from_middleware(AuthMiddleware)
@@ -14,9 +17,12 @@ print(auth_middleware)
 def get_cart(request):
     if request.user.is_authenticated:
         products = request.user.cart.products.all()
-
+        total = 0
+        for cartItem in products:
+            total += cartItem.product.price * cartItem.amount
         return render(request, "pages/cart.html", {
-            "products": products
+            "products": products,
+            "total": total
         })
 
     return redirect("/")
@@ -32,6 +38,23 @@ def add_to_cart(request, idProduct):
 
     return redirect("/")
 
+
+@csrf_exempt
+def change_amount(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+
+        amount = data['amount']
+        id_item = data['idItem']
+
+        cart_item = CartItem.objects.get(id=id_item)
+
+        cart_item.amount = amount
+        cart_item.save()
+
+        return JsonResponse({
+            "message": "Hola"
+        })
 
 def delete_from_cart(request, id_cart_item):
     if request.user.is_authenticated:

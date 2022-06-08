@@ -14,3 +14,12 @@
 .cart-item-image{
     width: 100px;
 }
+
+.total{
+    width: 80%;
+    margin: 20px auto;
+    background: white;
+    text-align: right;
+    font-weight: bold;
+    font-size: 30px;
+}
