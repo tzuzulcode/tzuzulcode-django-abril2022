@@ -6,6 +6,10 @@ from django.utils.decorators import decorator_from_middleware
 from users.middleware import AuthMiddleware
 from django.views.decorators.csrf import csrf_exempt
 import json
+import requests
+from requests.auth import HTTPBasicAuth
+
+paypal_url = "https://api-m.sandbox.paypal.com"
 
 # Create your views here.
 auth_middleware = decorator_from_middleware(AuthMiddleware)
@@ -41,6 +45,7 @@ def add_to_cart(request, idProduct):
 
 @csrf_exempt
 def change_amount(request):
+    print(request.user)
     if request.method == "POST":
         data = json.loads(request.body)
 
@@ -52,8 +57,14 @@ def change_amount(request):
         cart_item.amount = amount
         cart_item.save()
 
+        cart_items = cart_item.cart.products.all()
+
+        total = 0
+        for cartItem in cart_items:
+            total += cartItem.product.price * cartItem.amount
+
         return JsonResponse({
-            "message": "Hola"
+            "total": total
         })
 
 def delete_from_cart(request, id_cart_item):
@@ -65,3 +76,19 @@ def delete_from_cart(request, id_cart_item):
             return redirect("/cart")
 
     return redirect("/")
+
+
+def get_access_token():
+    return "A21AAJ6ODMptp-ReDHRpKUSHWo1378r_P_cvn2yAuZs1FOxTmtKiQLg6ZbKGa4o6v5oxzR3y2kD457_TxswnCGw7ZubmLF3-g"
+
+def generate_client_token(request):
+    access_token = get_access_token()
+
+    client_token_url = paypal_url + "/v1/oauth2/token"
+    response = requests.post(client_token_url, headers={
+        "Authorization": "Bearer "+access_token,
+        "Accept-Language": "en_US",
+        "Content-Type": "application/json",
+    })
+
+    print(response)
