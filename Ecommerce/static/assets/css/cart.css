@@ -1,0 +1,34 @@
+.cart{
+    width: 80%;
+    margin: 0 auto;
+    background: white;
+}
+
+.cart-item{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.cart-item-image{
+    width: 100px;
+}
+
+.total{
+    width: 80%;
+    margin: 20px auto;
+    background: white;
+    text-align: right;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.payment_btn{
+    text-decoration: none;
+    background: #283044;
+    padding: 10px 20px;
+    color: white;
+    font-size: 24px;
+    border-radius: 5px;
+}
