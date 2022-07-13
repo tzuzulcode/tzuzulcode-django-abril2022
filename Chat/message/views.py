@@ -3,6 +3,11 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from .models import Message
 from .api.serializers import MessageSerializer
+from django.shortcuts import render
+
+
+def home(request):
+    return render(request, "home.html")
 
 
 # Create your views here.
