@@ -18,7 +18,10 @@ class MessageConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, code):
-        pass
+        async_to_sync(self.channel_layer.group_discard)(
+            self.chat_name,
+            self.channel_name
+        )
 
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
@@ -27,12 +30,14 @@ class MessageConsumer(WebsocketConsumer):
             message = text_data_json["message"]
             new_message = Message.objects.create(content=message, author=self.user, idChat_id=self.chat_id)
             serialized_message = MessageSerializer(new_message)
-            response = {
-                "data": serialized_message.data,
-                "event": "message_sent"
-            }
 
             async_to_sync(self.channel_layer.group_send)(
-                self.chat_name, response
+                self.chat_name, {
+                    'type': "send_message",
+                    'message': serialized_message.data
+                }
             )
             # self.send(text_data=json.dumps())
+
+    def send_message(self, event):
+        self.send(text_data=json.dumps(event))

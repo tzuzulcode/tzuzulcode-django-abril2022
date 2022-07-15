@@ -29,8 +29,9 @@
         const chatWebSocket = new WebSocket(url)
 
         chatWebSocket.onmessage = function (e){
+            alert("Nuevo mensaje!!")
             const data = JSON.parse(e.data)
-            if(data.event==="message_sent"){
+            if(data.type==="send_message"){
                 console.log(data)
             }
         }
